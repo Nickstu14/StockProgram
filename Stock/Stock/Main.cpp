@@ -8,9 +8,19 @@ int Input(int _Min, int _Max);
 void MasterFile();
 void ReadFile();
 void WriteFile();
+void InputStock();
 
 std::string fileName = "MasterFile.txt";
+std::string stockFileName = "StockFile.txt";
 std::vector<std::string> m_MasterList;
+std::vector<Stock> m_stock;
+
+class Stock
+{
+public:
+	std::string m_name;
+	int quantity;
+};
 
 int main()
 {
@@ -19,7 +29,7 @@ int main()
 	do {
 		switch (Menu(0))
 		{
-		case 1:
+		case 1: InputStock();
 			break;
 		case 2:
 			break;
@@ -65,7 +75,7 @@ int Menu(int _val)
 		m_min = 1;
 		m_max = 4;
 		break;
-	case 1:	//Sub Menu
+	case 1:	std::cout << "1 - UK 4 Gang 1 Meter\n"
 		break;
 	}
 	return Input(m_min, m_max);
@@ -73,6 +83,7 @@ int Menu(int _val)
 
 void MasterFile()
 {
+	/*The master file holds all the file names of the build files*/
 	std::ifstream file(fileName);
 
 	if (file.is_open())
@@ -103,6 +114,39 @@ void MasterFile()
 	}
 }
 
+void StockFile()
+{
+	/*The master file holds all the file names of the build files*/
+	std::ifstream file(stockFileName);
+
+	if (file.is_open())
+	{
+		do
+		{
+			Stock stock;
+			char currentChar;
+			do
+			{
+				file >> currentChar;
+				std::cout << file.eof();
+				if ((currentChar != '\n') && (!file.eof()))
+				{
+					//populate the file string
+					stock.m_name += currentChar;
+				}
+
+			} while ((currentChar != '\n') && (!file.eof()));
+			//add the file name to the stock list
+			m_stock.push_back(stock);
+		} while (!file.eof());
+	}
+	else
+	{
+		std::cout << "Can't find file: " << fileName << std::endl;
+		//Create New masterFile?	add Y/N		if Y create if N Exit program
+	}
+}
+
 void ReadFile()
 {
 
@@ -113,7 +157,18 @@ void WriteFile()
 
 }
 
+void InputStock()
+{
+	Menu(1);
+}
 
+
+/*Notes
+
+find a way to break up the chars and ints from the stock file.
+
+
+*/
 
 
 
