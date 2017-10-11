@@ -9,23 +9,29 @@ void MasterFile();
 void ReadFile();
 void WriteFile();
 void InputStock();
+void ReadStockFile();
+void ShowStock();
+
+class Stock
+{
+public:
+	std::string m_partnumber;
+	std::string m_name;
+	int m_quantity;
+};
+
 
 std::string fileName = "MasterFile.txt";
 std::string stockFileName = "StockFile.txt";
 std::vector<std::string> m_MasterList;
 std::vector<Stock> m_stock;
 
-class Stock
-{
-public:
-	std::string m_name;
-	int quantity;
-};
+
 
 int main()
 {
 	MasterFile();
-
+	ReadStockFile();
 	do {
 		switch (Menu(0))
 		{
@@ -33,7 +39,7 @@ int main()
 			break;
 		case 2:
 			break;
-		case 3:
+		case 3: ShowStock();
 			break;
 		case 4: exit(0);
 			break;
@@ -75,7 +81,7 @@ int Menu(int _val)
 		m_min = 1;
 		m_max = 4;
 		break;
-	case 1:	std::cout << "1 - UK 4 Gang 1 Meter\n"
+	case 1:	std::cout << "1 - UK 4 Gang 1 Meter\n";
 		break;
 	}
 	return Input(m_min, m_max);
@@ -95,13 +101,11 @@ void MasterFile()
 			do
 			{
 				file >> currentChar;
-				std::cout << file.eof();
-				if ((currentChar != '\n')&&(!file.eof()))
+				if ((currentChar != '\n') && (!file.eof()))
 				{
 					//populate the file string
 					m_FileName += currentChar;
 				}
-					
 			} while ((currentChar != '\n') && (!file.eof()));
 			//add the file name to the Master list
 			m_MasterList.push_back(m_FileName);
@@ -114,31 +118,18 @@ void MasterFile()
 	}
 }
 
-void StockFile()
+void ReadStockFile()
 {
-	/*The master file holds all the file names of the build files*/
+
 	std::ifstream file(stockFileName);
 
 	if (file.is_open())
 	{
-		do
+		Stock stock;
+		while (file >> stock.m_partnumber >> stock.m_name >> stock.m_quantity)
 		{
-			Stock stock;
-			char currentChar;
-			do
-			{
-				file >> currentChar;
-				std::cout << file.eof();
-				if ((currentChar != '\n') && (!file.eof()))
-				{
-					//populate the file string
-					stock.m_name += currentChar;
-				}
-
-			} while ((currentChar != '\n') && (!file.eof()));
-			//add the file name to the stock list
 			m_stock.push_back(stock);
-		} while (!file.eof());
+		}
 	}
 	else
 	{
@@ -160,6 +151,16 @@ void WriteFile()
 void InputStock()
 {
 	Menu(1);
+}
+
+void ShowStock()
+{
+	std::cout << "|Part Numbers\t|Name\t|Qty" << std::endl;
+	for (auto it = m_stock.begin(); it != m_stock.end(); it++)
+	{
+		std::cout << it->m_partnumber << "\t" << it->m_name << "\t" << it->m_quantity << std::endl;
+	}
+
 }
 
 
