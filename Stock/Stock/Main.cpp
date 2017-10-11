@@ -1,15 +1,18 @@
 # include <iostream>
 # include <fstream>
 # include <string>
+#include <conio.h>
 # include <vector>
 
 int Menu(int _Val);
 int Input(int _Min, int _Max);
+void Clearscreen();
 void MasterFile();
 void ReadFile();
 void WriteFile();
-void InputStock();
+void InputStock(int _val);
 void ReadStockFile();
+void WriteStock();
 void ShowStock();
 
 class Stock
@@ -30,12 +33,15 @@ std::vector<Stock> m_stock;
 
 int main()
 {
+	Clearscreen();
 	MasterFile();
 	ReadStockFile();
+
 	do {
 		switch (Menu(0))
 		{
-		case 1: InputStock();
+		case 1: InputStock(Menu(1));
+			WriteStock();
 			break;
 		case 2:
 			break;
@@ -67,8 +73,14 @@ int Input(int _Min, int _Max)
 			std::cout << "\nPlease enter between " << _Min << " & " << _Max << ": ";
 		}
 	} while ((val < _Min) || (val > _Max));
-
+	Clearscreen();
 	return val;
+}
+
+void Clearscreen()
+{
+	for (int i = 0; i < 50; i++)
+		std::cout << std::endl;
 }
 
 int Menu(int _val)
@@ -81,10 +93,19 @@ int Menu(int _val)
 		m_min = 1;
 		m_max = 4;
 		break;
-	case 1:	std::cout << "1 - UK 4 Gang 1 Meter\n";
+	case 1:
+		int i =0;
+		for (auto it = m_stock.begin(); it != m_stock.end(); it++)
+		{
+			std::cout << i++ << " "<< it->m_name << std::endl;
+		}
+		
+		m_min = 0;
+		m_max = m_stock.size();
 		break;
 	}
 	return Input(m_min, m_max);
+
 }
 
 void MasterFile()
@@ -136,6 +157,25 @@ void ReadStockFile()
 		std::cout << "Can't find file: " << fileName << std::endl;
 		//Create New masterFile?	add Y/N		if Y create if N Exit program
 	}
+	file.close();
+}
+void WriteStock()
+{
+	std::ofstream file(stockFileName);
+
+	if (file.is_open())
+	{
+		for (auto it = m_stock.begin(); it != m_stock.end(); it++)
+		{
+			file << it->m_partnumber << " " << it->m_name << " " << it->m_quantity << std::endl;
+		}
+	}
+	else
+	{
+		std::cout << "Can't find file: " << fileName << std::endl;
+		//Create New masterFile?	add Y/N		if Y create if N Exit program
+	}
+	file.close();
 }
 
 void ReadFile()
@@ -148,25 +188,30 @@ void WriteFile()
 
 }
 
-void InputStock()
+void InputStock(int _val)
 {
-	Menu(1);
+	std::cout << "Please enter Quantity for " << m_stock[_val].m_name << ": ";
+	std::cin >> m_stock[_val].m_quantity;
 }
 
 void ShowStock()
 {
-	std::cout << "|Part Numbers\t|Name\t|Qty" << std::endl;
+	//std::cout << "Part Name\t|Qty" << std::endl;
 	for (auto it = m_stock.begin(); it != m_stock.end(); it++)
 	{
-		std::cout << it->m_partnumber << "\t" << it->m_name << "\t" << it->m_quantity << std::endl;
+		std::cout << /*it->m_partnumber << "\t" <<*/ it->m_name << "\t" << it->m_quantity << std::endl;
 	}
+	std::cout << std::endl << std::endl;
 
 }
 
 
 /*Notes
 
-find a way to break up the chars and ints from the stock file.
+Read and wrte to the stock file is done
+Show stock is done
+add stock is done but with no validation
+
 
 
 */
