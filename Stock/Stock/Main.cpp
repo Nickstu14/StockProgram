@@ -14,7 +14,7 @@ void InputStock(int _val);
 void ReadStockFile();
 void WriteStock();
 void ShowStock();
-void Builds();
+void Builds(int _val);
 void Damages(int _val);
 
 class Stock
@@ -45,7 +45,7 @@ int main()
 		case 1: InputStock(Menu(1));
 			WriteStock();
 			break;
-		case 2: //Builds();
+		case 2: //Builds(Menu(2));
 			break;
 		case 3: ShowStock();
 			break;
@@ -70,21 +70,20 @@ int Input(int _Min, int _Max)
 	std::cout << "Choice: ";
 	do
 	{
-		std::cin >> val;
-		/*if (std::cin.fail())
+		if (std::cin.fail())
 		{
 			std::cout << "Please enter an number value: ";
 			std::cin.clear();
-			std::cin.ignore(256);
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		}
 		else
-		{*/
+		{
 			if ((val < _Min) || (val > _Max))
 			{
 				//print error
 				std::cout << "\nPlease enter between " << _Min << " & " << _Max << ": ";
 			}
-		//}
+		}
 	} while ((val < _Min) || (val > _Max));
 	Clearscreen();
 	return val;
@@ -99,7 +98,7 @@ void Clearscreen()
 int Menu(int _val)
 {
 	int m_min = 0, m_max = 0;
-
+	int i = 0;
 	switch (_val)
 	{
 	case 0: std::cout << "1 - Input Stock\n2 - Quantity Build\n3 - Stock Levels\n4 - Damages\n5 - Quit\n"; //Main Menu
@@ -107,7 +106,7 @@ int Menu(int _val)
 		m_max = 5;
 		break;
 	case 1:
-		int i = 0;
+		
 		for (auto it = m_stock.begin(); it != m_stock.end(); it++)
 		{
 			std::cout << i++ << " " << it->m_name << std::endl;
@@ -116,8 +115,15 @@ int Menu(int _val)
 		m_min = 0;
 		m_max = m_stock.size();
 		break;
-	/*case 2:
-		break;*/
+	case 2:
+		for (int i = 0; i < m_MasterList.size(); i++)
+		{
+			std::cout << i << " " << m_MasterList[i] << std::endl;
+		}
+
+		m_min = 0;
+		m_max = m_MasterList.size();
+		break;
 	}
 	return Input(m_min, m_max);
 
@@ -193,7 +199,7 @@ void WriteStock()
 	file.close();
 }
 
-void Builds()
+void Builds(int _val)
 {
 
 }
