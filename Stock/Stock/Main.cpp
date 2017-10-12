@@ -14,6 +14,8 @@ void InputStock(int _val);
 void ReadStockFile();
 void WriteStock();
 void ShowStock();
+void Builds();
+void Damages(int _val);
 
 class Stock
 {
@@ -43,11 +45,13 @@ int main()
 		case 1: InputStock(Menu(1));
 			WriteStock();
 			break;
-		case 2:
+		case 2: //Builds();
 			break;
 		case 3: ShowStock();
 			break;
-		case 4: exit(0);
+		case 4: Damages(Menu(1));
+			break;
+		case 5: exit(0);
 			break;
 		}
 
@@ -67,11 +71,20 @@ int Input(int _Min, int _Max)
 	do
 	{
 		std::cin >> val;
-		if ((val < _Min) || (val > _Max))
+		/*if (std::cin.fail())
 		{
-			//print error
-			std::cout << "\nPlease enter between " << _Min << " & " << _Max << ": ";
+			std::cout << "Please enter an number value: ";
+			std::cin.clear();
+			std::cin.ignore(256);
 		}
+		else
+		{*/
+			if ((val < _Min) || (val > _Max))
+			{
+				//print error
+				std::cout << "\nPlease enter between " << _Min << " & " << _Max << ": ";
+			}
+		//}
 	} while ((val < _Min) || (val > _Max));
 	Clearscreen();
 	return val;
@@ -89,20 +102,22 @@ int Menu(int _val)
 
 	switch (_val)
 	{
-	case 0: std::cout << "1 - Input Stock\n2 - Quantity Build\n3 - Stock Levels\n4 - Quit\n"; //Main Menu
+	case 0: std::cout << "1 - Input Stock\n2 - Quantity Build\n3 - Stock Levels\n4 - Damages\n5 - Quit\n"; //Main Menu
 		m_min = 1;
-		m_max = 4;
+		m_max = 5;
 		break;
 	case 1:
-		int i =0;
+		int i = 0;
 		for (auto it = m_stock.begin(); it != m_stock.end(); it++)
 		{
-			std::cout << i++ << " "<< it->m_name << std::endl;
+			std::cout << i++ << " " << it->m_name << std::endl;
 		}
-		
+
 		m_min = 0;
 		m_max = m_stock.size();
 		break;
+	/*case 2:
+		break;*/
 	}
 	return Input(m_min, m_max);
 
@@ -178,6 +193,11 @@ void WriteStock()
 	file.close();
 }
 
+void Builds()
+{
+
+}
+
 void ReadFile()
 {
 
@@ -190,8 +210,10 @@ void WriteFile()
 
 void InputStock(int _val)
 {
+	int m_Val;
 	std::cout << "Please enter Quantity for " << m_stock[_val].m_name << ": ";
-	std::cin >> m_stock[_val].m_quantity;
+	std::cin >> m_Val;
+	m_stock[_val].m_quantity += m_Val;
 }
 
 void ShowStock()
@@ -205,6 +227,13 @@ void ShowStock()
 
 }
 
+void Damages(int _val)
+{
+	int m_val;
+	std::cout << "Please enter the quantity for " << m_stock[_val].m_name << ": ";
+	std::cin >> m_val;
+	m_stock[_val].m_quantity -= m_val;
+}
 
 /*Notes
 
