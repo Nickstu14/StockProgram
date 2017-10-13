@@ -4,11 +4,20 @@
 #include <conio.h>
 # include <vector>
 
+class Stock
+{
+public:
+	std::string m_partnumber;
+	std::string m_name;
+	int m_quantity;
+};
+
+
 int Menu(int _Val);
 int Input(int _Min, int _Max);
 void Clearscreen();
 void MasterFile();
-void ReadFile();
+std::vector<Stock> ReadBuildFile(std::string _val);
 void WriteFile();
 void InputStock(int _val);
 void ReadStockFile();
@@ -17,13 +26,7 @@ void ShowStock();
 void Builds(int _val);
 void Damages(int _val);
 
-class Stock
-{
-public:
-	std::string m_partnumber;
-	std::string m_name;
-	int m_quantity;
-};
+
 
 
 std::string fileName = "MasterFile.txt";
@@ -45,7 +48,8 @@ int main()
 		case 1: InputStock(Menu(1));
 			WriteStock();
 			break;
-		case 2: //Builds(Menu(2));
+		case 2: Builds(Menu(2));
+			WriteStock();
 			break;
 		case 3: ShowStock();
 			break;
@@ -68,6 +72,7 @@ int Input(int _Min, int _Max)
 {
 	int val;
 	std::cout << "Choice: ";
+	std::cin >> val;
 	do
 	{
 		if (std::cin.fail())
@@ -106,7 +111,7 @@ int Menu(int _val)
 		m_max = 5;
 		break;
 	case 1:
-		
+
 		for (auto it = m_stock.begin(); it != m_stock.end(); it++)
 		{
 			std::cout << i++ << " " << it->m_name << std::endl;
@@ -136,22 +141,11 @@ void MasterFile()
 
 	if (file.is_open())
 	{
-		do
+		std::string m_name;
+		while (file >> m_name)
 		{
-			char currentChar;
-			std::string m_FileName;
-			do
-			{
-				file >> currentChar;
-				if ((currentChar != '\n') && (!file.eof()))
-				{
-					//populate the file string
-					m_FileName += currentChar;
-				}
-			} while ((currentChar != '\n') && (!file.eof()));
-			//add the file name to the Master list
-			m_MasterList.push_back(m_FileName);
-		} while (!file.eof());
+			m_MasterList.push_back(m_name);
+		}
 	}
 	else
 	{
@@ -201,12 +195,48 @@ void WriteStock()
 
 void Builds(int _val)
 {
+	std::vector<Stock> m_tempstocks;
+	m_tempstocks = ReadBuildFile(m_MasterList[_val]);
 
+	int m_val;
+	std::cout << "\nQuantity";
+	std::cin >> m_val;
+	//Find temp name with stock name
+	for (int i = 0; i < m_val; i++)
+	{
+
+		for (auto it = m_stock.begin(); it != m_stock.end(); it++)
+		{
+			for (auto is = m_tempstocks.begin(); is != m_tempstocks.end(); is++)
+			{
+				if (it->m_name == is->m_name)
+					it->m_quantity -= is->m_quantity;
+			}
+		}
+	}
 }
 
-void ReadFile()
+std::vector<Stock> ReadBuildFile(std::string _val)
 {
+	std::vector<Stock> m_tempvector;
+	Stock m_tempStock;
+	std::ifstream file(_val + ".txt");
 
+	if (file.is_open())
+	{
+
+		while (file >> m_tempStock.m_partnumber >> m_tempStock.m_name >> m_tempStock.m_quantity)
+		{
+			m_tempvector.push_back(m_tempStock);
+		}
+	}
+	else
+	{
+		std::cout << "Can't find file: " << fileName << std::endl;
+		//Create New masterFile?	add Y/N		if Y create if N Exit program
+	}
+	file.close();
+	return m_tempvector;
 }
 
 void WriteFile()

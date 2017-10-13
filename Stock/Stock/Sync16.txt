@@ -1,0 +1,12 @@
+"" Sync16Board 1
+"" Sync16Case 1
+"" SyncPower 1
+"" SyncMetalBase 1
+"" TriPinPlug 1
+"" BlueCableThick 2
+"" BrownCableThick 2
+"" EarthCableStud 1
+"" EarthCableSpade 1
+"" BlueCableThin 1
+"" BrownCableThin 1
+"" BlueDotSticker 1
