@@ -10,6 +10,7 @@ public:
 	std::string m_partnumber;
 	std::string m_name;
 	int m_quantity;
+	int m_LowLimit;
 };
 
 
@@ -18,13 +19,13 @@ int Input(int _Min, int _Max);
 void Clearscreen();
 void MasterFile();
 std::vector<Stock> ReadBuildFile(std::string _val);
-void WriteFile();
 void InputStock(int _val);
 void ReadStockFile();
 void WriteStock();
 void ShowStock();
 void Builds(int _val);
 void Damages(int _val);
+void CheckStock();
 
 
 
@@ -43,6 +44,8 @@ int main()
 	ReadStockFile();
 
 	do {
+		CheckStock(); //always check for low stock
+
 		switch (Menu(0))
 		{
 		case 1: InputStock(Menu(1));
@@ -54,11 +57,12 @@ int main()
 		case 3: ShowStock();
 			break;
 		case 4: Damages(Menu(1));
+			WriteStock();
 			break;
 		case 5: exit(0);
 			break;
 		}
-
+		
 
 
 	} while (1);
@@ -162,7 +166,7 @@ void ReadStockFile()
 	if (file.is_open())
 	{
 		Stock stock;
-		while (file >> stock.m_partnumber >> stock.m_name >> stock.m_quantity)
+		while (file >> stock.m_partnumber >> stock.m_name >> stock.m_quantity >> stock.m_LowLimit)
 		{
 			m_stock.push_back(stock);
 		}
@@ -182,7 +186,7 @@ void WriteStock()
 	{
 		for (auto it = m_stock.begin(); it != m_stock.end(); it++)
 		{
-			file << it->m_partnumber << " " << it->m_name << " " << it->m_quantity << std::endl;
+			file << it->m_partnumber << " " << it->m_name << " " << it->m_quantity << it->m_LowLimit << std::endl;
 		}
 	}
 	else
@@ -199,7 +203,7 @@ void Builds(int _val)
 	m_tempstocks = ReadBuildFile(m_MasterList[_val]);
 
 	int m_val;
-	std::cout << "\nQuantity";
+	std::cout << "\nQuantity: ";
 	std::cin >> m_val;
 	//Find temp name with stock name
 	for (int i = 0; i < m_val; i++)
@@ -239,11 +243,6 @@ std::vector<Stock> ReadBuildFile(std::string _val)
 	return m_tempvector;
 }
 
-void WriteFile()
-{
-
-}
-
 void InputStock(int _val)
 {
 	int m_Val;
@@ -261,6 +260,11 @@ void ShowStock()
 	}
 	std::cout << std::endl << std::endl;
 
+	char val;
+	std::cout << "Press any button to continue: ";
+	std::cin.clear();
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	getchar();
 }
 
 void Damages(int _val)
@@ -269,6 +273,21 @@ void Damages(int _val)
 	std::cout << "Please enter the quantity for " << m_stock[_val].m_name << ": ";
 	std::cin >> m_val;
 	m_stock[_val].m_quantity -= m_val;
+}
+
+void CheckStock()
+{
+	//Clearscreen();
+	std::cout << "\nStock Levels Low" << std::endl << "================" << std::endl;
+	for (auto it = m_stock.begin(); it != m_stock.end(); it++)
+	{
+		
+		if (it->m_LowLimit >= it->m_quantity)
+		{
+			std::cout << it->m_partnumber << "\t" << it->m_name << "\t" << it->m_quantity << std::endl;
+		}
+	}
+	std::cout << std::endl << std::endl;
 }
 
 /*Notes

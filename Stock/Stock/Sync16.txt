@@ -9,4 +9,3 @@
 "" EarthCableSpade 1
 "" BlueCableThin 1
 "" BrownCableThin 1
-"" BlueDotSticker 1
