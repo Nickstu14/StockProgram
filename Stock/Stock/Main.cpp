@@ -30,22 +30,25 @@ void CheckStock();
 
 
 
-std::string fileName = "MasterFile.txt";
-std::string stockFileName = "StockFile.txt";
+std::string fileName = "..\\Stock\\MasterFile.txt";
+std::string stockFileName = "..\\Stock\\StockFile.txt";
 std::vector<std::string> m_MasterList;
 std::vector<Stock> m_stock;
 
 
-
 int main()
 {
+	
+
 	Clearscreen();
 	MasterFile();
 	ReadStockFile();
 
-	do {
-		CheckStock(); //always check for low stock
+	
 
+	do {
+		Clearscreen();
+		CheckStock(); //always check for low stock
 		switch (Menu(0))
 		{
 		case 1: InputStock(Menu(1));
@@ -67,9 +70,8 @@ int main()
 
 	} while (1);
 
-
+	
 }
-
 
 
 int Input(int _Min, int _Max)
@@ -173,7 +175,7 @@ void ReadStockFile()
 	}
 	else
 	{
-		std::cout << "Can't find file: " << fileName << std::endl;
+		std::cout << "Can't find file: " << stockFileName << std::endl;
 		//Create New masterFile?	add Y/N		if Y create if N Exit program
 	}
 	file.close();
@@ -186,7 +188,7 @@ void WriteStock()
 	{
 		for (auto it = m_stock.begin(); it != m_stock.end(); it++)
 		{
-			file << it->m_partnumber << " " << it->m_name << " " << it->m_quantity << it->m_LowLimit << std::endl;
+			file << it->m_partnumber << " " << it->m_name << " " << it->m_quantity << " " << it->m_LowLimit << std::endl;
 		}
 	}
 	else
@@ -224,7 +226,7 @@ std::vector<Stock> ReadBuildFile(std::string _val)
 {
 	std::vector<Stock> m_tempvector;
 	Stock m_tempStock;
-	std::ifstream file(_val + ".txt");
+	std::ifstream file("..\\Stock\\" + _val + ".txt");
 
 	if (file.is_open())
 	{
@@ -278,12 +280,17 @@ void Damages(int _val)
 void CheckStock()
 {
 	//Clearscreen();
-	std::cout << "\nStock Levels Low" << std::endl << "================" << std::endl;
+	bool once = true;
 	for (auto it = m_stock.begin(); it != m_stock.end(); it++)
 	{
 		
 		if (it->m_LowLimit >= it->m_quantity)
 		{
+			if (once)
+			{
+				std::cout << "\nStock Levels Low" << std::endl << "================" << std::endl;
+				once = false;
+			}
 			std::cout << it->m_partnumber << "\t" << it->m_name << "\t" << it->m_quantity << std::endl;
 		}
 	}
